@@ -11,8 +11,6 @@ contract Official is Ownable, ReentrancyGuard {
     using SafeERC20 for IERC20;
     using Address for address payable;
 
-    mapping(uint256 => bool) public processedBusinessIds;
-
     uint256 public constant MAX_REQUESTS = 1024;
 
     struct TransferRequest {
@@ -20,15 +18,13 @@ contract Official is Ownable, ReentrancyGuard {
         address to;
         address token;
         uint256 amount;
-        uint256 businessId;
     }
 
-    event ERC20BatchTransferPerformed(
+    event BatchTransferPerformed(
         address indexed from,
         address indexed to,
         address indexed token,
-        uint256 value,
-        uint256 businessId
+        uint256 value
     );
 
     constructor() Ownable(msg.sender) {}
@@ -48,7 +44,6 @@ contract Official is Ownable, ReentrancyGuard {
             TransferRequest calldata request = requests[i];
 
             if (
-                processedBusinessIds[request.businessId] ||
                 request.from == request.to ||
                 request.from == address(0) ||
                 request.to == address(0) ||
@@ -67,16 +62,13 @@ contract Official is Ownable, ReentrancyGuard {
                 continue;
             }
 
-            processedBusinessIds[request.businessId] = true;
-
             token.safeTransferFrom(request.from, request.to, request.amount);
 
-            emit ERC20BatchTransferPerformed(
+            emit BatchTransferPerformed(
                 request.from,
                 request.to,
                 request.token,
-                request.amount,
-                request.businessId
+                request.amount
             );
         }
     }

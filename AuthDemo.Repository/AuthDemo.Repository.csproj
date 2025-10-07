@@ -6,4 +6,11 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Nethereum.Web3" Version="5.0.0" />
+    <PackageReference Include="NLog.Web.AspNetCore" Version="6.0.4" />
+    <PackageReference Include="Scalar.AspNetCore" Version="2.8.10" />
+    <PackageReference Include="Zero.Core" Version="5.8.8" />
+  </ItemGroup>
+
 </Project>
