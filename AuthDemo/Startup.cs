@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.OpenApi.Models;
 using NLog.Web;
 using Scalar.AspNetCore;
-using TronSharp;
 using Zero.Core.Extensions;
 using Zero.Core.Util;
 
@@ -69,35 +68,35 @@ public class Startup
         StartupHelper.AddSwaggerGen(builder, ApiArray);
 
 
-        if (builder.Environment.IsProduction())
-        {
-            builder.Services.AddTronSharp(x =>
-                        {
-                            x.Network = TronNetwork.MainNet;
-                            x.Channel = new GrpcChannelOption { Host = "grpc.trongrid.io", Port = 50051 };
-                            x.SolidityChannel = new GrpcChannelOption { Host = "grpc.trongrid.io", Port = 50052 };
-                            x.ProApiKey = "44e143f3-acb2-49ef-9739-a40ce7b8ec42";
-                        });
-        }
-        else
-        {
-            builder.Services.AddTronSharp(x =>
-                        {
-                            x.Network = TronNetwork.TestNet;
-                            x.Channel = new GrpcChannelOption { Host = "grpc.shasta.trongrid.io", Port = 50051 };
-                            x.SolidityChannel = new GrpcChannelOption { Host = "grpc.shasta.trongrid.io", Port = 50052 };
-                            x.ProApiKey = "44e143f3-acb2-49ef-9739-a40ce7b8ec42";
-                        });
-        }
+        // if (builder.Environment.IsProduction())
+        // {
+        //     builder.Services.AddTronSharp(x =>
+        //                 {
+        //                     x.Network = TronNetwork.MainNet;
+        //                     x.Channel = new GrpcChannelOption { Host = "grpc.trongrid.io", Port = 50051 };
+        //                     x.SolidityChannel = new GrpcChannelOption { Host = "grpc.trongrid.io", Port = 50052 };
+        //                     x.ProApiKey = "44e143f3-acb2-49ef-9739-a40ce7b8ec42";
+        //                 });
+        // }
+        // else
+        // {
+        //     builder.Services.AddTronSharp(x =>
+        //                 {
+        //                     x.Network = TronNetwork.TestNet;
+        //                     x.Channel = new GrpcChannelOption { Host = "grpc.shasta.trongrid.io", Port = 50051 };
+        //                     x.SolidityChannel = new GrpcChannelOption { Host = "grpc.shasta.trongrid.io", Port = 50052 };
+        //                     x.ProApiKey = "44e143f3-acb2-49ef-9739-a40ce7b8ec42";
+        //                 });
+        // }
     }
 
     private static void RegisterApplicationModules(WebApplicationBuilder builder)
     {
         builder.Services.AddZeroNetCoreAssembly();
 
-        builder.Services.AddAssembly("CoinWallet.Domain");
+        builder.Services.AddAssembly("AuthDemo.Domain");
 
-        builder.Services.AddAssembly("CoinWallet.Service");
+        builder.Services.AddAssembly("AuthDemo.Service");
 
         #region 
         // builder.Services.AddHostedService<AdminLogWorker>();

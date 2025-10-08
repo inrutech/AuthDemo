@@ -1,7 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AuthDemo.Domain.Client.TVM;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
-using TronSharp;
-using TronSharp.Contract;
 using Zero.Core.Attribute;
 using Zero.Core.Extensions;
 using Zero.Core.Inject;
@@ -17,8 +16,6 @@ public class BaseService(IServiceProvider provider)
 
     public IHttpContextAccessor HttpContextAccessor => provider.GetService<IHttpContextAccessor>()!;
 
-    public ITronClient TronClient => provider.GetRequiredService<ITronClient>();
-
     // public DBContext DB => _provider.GetService<DBContext>()!;
 
     public WebCache WebCache => provider.GetService<WebCache>()!;
@@ -26,6 +23,8 @@ public class BaseService(IServiceProvider provider)
     public Snowflake Snowflake => provider.GetService<Snowflake>()!;
 
     public WebClient WebClient => provider.GetService<WebClient>()!;
+
+    public TronClient TronClient => provider.GetService<TronClient>()!;
 
     protected SysResult<T> Result<T>(T? model)
     {

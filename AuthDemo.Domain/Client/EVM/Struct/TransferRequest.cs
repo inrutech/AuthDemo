@@ -14,7 +14,7 @@ public class TransferRequest
     /// <summary>
     /// 发送方地址
     /// </summary>
-    [Parameter("address", "from")]
+    [Parameter("address", "from", 1)]
     public string? From { get; set; }
 
     /// <summary>
@@ -34,10 +34,4 @@ public class TransferRequest
     /// </summary>
     [Parameter("uint256", "amount", 4)]
     public BigInteger Amount { get; set; }
-
-    /// <summary>
-    /// ҵ数ID
-    /// </summary>
-    [Parameter("uint256", "businessId", 5)]
-    public BigInteger BusinessId { get; set; }
 }
