@@ -35,7 +35,7 @@ public class TestService(IServiceProvider provider) : BaseService(provider)
             var tokenAddress = "TC2p2VDDafzqTUePmZ2Q8XXD2eBqmU6wPG"; // USDT TRC20
 
             // 🔥 尝试调用你实际部署的合约！
-            var function = new BatchTransferFunction
+            var function = new BatchTransferTokenFunction
             {
                 Requests =
                 [
